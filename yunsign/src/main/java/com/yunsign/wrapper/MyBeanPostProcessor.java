@@ -7,6 +7,9 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * 插手bean的实例化过程
+ */
 @Component
 public class MyBeanPostProcessor implements BeanFactoryPostProcessor {
 	@Override
