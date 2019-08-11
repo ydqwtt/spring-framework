@@ -28,6 +28,7 @@ public class SignContractImpl implements SignContract, ApplicationContextAware{
 		CreateContract createContract2 =  applicationContext.getBean("createContract",CreateContract.class);
 		System.out.println("createContract2.hashCode()==="+createContract2.hashCode());
 		System.out.println("createContract3.hashCode()==="+createContract.hashCode());
+
 //		createContract.createContract();
 	}
 
