@@ -1,13 +1,21 @@
 package com.yunsign.aop;
 
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import com.yunsign.dao.Dao;
+import com.yunsign.dao.impl.IndexDao;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
 public class YunsignAspect {
+
+	/**
+	 * 将目标对象实现Dao，里面的方法按IndexDao里执行
+	 */
+	@DeclareParents(value = "com.yunsign.dao.impl.*",defaultImpl = IndexDao.class)
+	private Dao dao;
 
 	//定义一个切点方法
 	@Pointcut("execution(* com.yunsign.dao.*.*(..))")
@@ -56,7 +64,27 @@ public class YunsignAspect {
 	}
 	//定义通知
 	@Before("pointCutThis()")
-	public void before(){
-		System.out.println("pointCut.before");
+	public void before(JoinPoint joinPoint){
+//		System.out.println("pointCut.before");
+	}
+
+	@Before("pointCutThis()")
+	public void after(){
+//		System.out.println("pointCut.after");
+	}
+
+	@Around("pointCutThis()")
+	public void around(ProceedingJoinPoint proceedingJoinPoint){
+//		System.out.println("pointCut.around.a");
+		Object [] args = proceedingJoinPoint.getArgs();
+		for (int i = 0; i < args.length; i++) {
+			args[i] += " world !";
+		}
+		try {
+			proceedingJoinPoint.proceed(args);
+		} catch (Throwable throwable) {
+			throwable.printStackTrace();
+		}
+//		System.out.println("pointCut.around.b");
 	}
 }

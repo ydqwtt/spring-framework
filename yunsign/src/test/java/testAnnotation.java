@@ -27,9 +27,17 @@ public class testAnnotation {
 		annotationConfigApplicationContext.refresh();
 		Dao indexDao = (Dao)annotationConfigApplicationContext.getBean("indexDao");
 
-		indexDao.query();
+		indexDao.query("hello");
 	}
+	@Test
+	public void testAopz(){
+		AnnotationConfigApplicationContext annotationConfigApplicationContext  = new AnnotationConfigApplicationContext();
+		annotationConfigApplicationContext.register(Aopconfig.class);
+		annotationConfigApplicationContext.refresh();
+		Dao indexDao = (Dao)annotationConfigApplicationContext.getBean("orderDao");
 
+		indexDao.query("hello");
+	}
 	@Test
 	public void testGenerateProxyClass(){
 		byte [] bytes = ProxyGenerator.generateProxyClass("IndexDao",new Class[]{Dao.class});
