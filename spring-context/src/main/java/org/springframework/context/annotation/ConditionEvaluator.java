@@ -53,7 +53,7 @@ class ConditionEvaluator {
 	/**
 	 * Create a new {@link ConditionEvaluator} instance.
 	 */
-	public ConditionEvaluator(@Nullable BeanDefinitionRegistry registry,
+	public  ConditionEvaluator(@Nullable BeanDefinitionRegistry registry,
 			@Nullable Environment environment, @Nullable ResourceLoader resourceLoader) {
 
 		this.context = new ConditionContextImpl(registry, environment, resourceLoader);
