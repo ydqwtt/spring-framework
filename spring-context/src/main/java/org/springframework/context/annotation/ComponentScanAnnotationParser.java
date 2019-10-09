@@ -92,7 +92,7 @@ class ComponentScanAnnotationParser {
 		}
 
 		scanner.setResourcePattern(componentScan.getString("resourcePattern"));
-
+		//遍历当中的过滤
 		for (AnnotationAttributes filter : componentScan.getAnnotationArray("includeFilters")) {
 			for (TypeFilter typeFilter : typeFiltersFor(filter)) {
 				scanner.addIncludeFilter(typeFilter);
@@ -103,7 +103,7 @@ class ComponentScanAnnotationParser {
 				scanner.addExcludeFilter(typeFilter);
 			}
 		}
-
+		//默认false
 		boolean lazyInit = componentScan.getBoolean("lazyInit");
 		if (lazyInit) {
 			scanner.getBeanDefinitionDefaults().setLazyInit(true);

@@ -221,7 +221,8 @@ class ConfigurationClassParser {
 		if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
 			return;
 		}
-
+		// 处理Imported 的情况
+		//就是当前这个注解类有没有被别的类import
 		ConfigurationClass existingClass = this.configurationClasses.get(configClass);
 		if (existingClass != null) {
 			if (configClass.isImported()) {
@@ -263,6 +264,7 @@ class ConfigurationClassParser {
 
 		if (configClass.getMetadata().isAnnotated(Component.class.getName())) {
 			// Recursively process any member (nested) classes first
+			//处理内部类(配置类中的内部类)
 			processMemberClasses(configClass, sourceClass);
 		}
 
@@ -286,22 +288,47 @@ class ConfigurationClassParser {
 				!this.conditionEvaluator.shouldSkip(sourceClass.getMetadata(), ConfigurationPhase.REGISTER_BEAN)) {
 			for (AnnotationAttributes componentScan : componentScans) {
 				// The config class is annotated with @ComponentScan -> perform the scan immediately
+				//扫描普通类=componentScan=com.luban
+				//这里扫描出来所有@@Component
+				//并且把扫描的出来的普通bean放到map当中
 				Set<BeanDefinitionHolder> scannedBeanDefinitions =
 						this.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());
 				// Check the set of scanned definitions for any further config classes and parse recursively if needed
+				//检查扫描出来的类当中是否还有configuration
 				for (BeanDefinitionHolder holder : scannedBeanDefinitions) {
 					BeanDefinition bdCand = holder.getBeanDefinition().getOriginatingBeanDefinition();
 					if (bdCand == null) {
 						bdCand = holder.getBeanDefinition();
 					}
+					//检查  todo
 					if (ConfigurationClassUtils.checkConfigurationClassCandidate(bdCand, this.metadataReaderFactory)) {
 						parse(bdCand.getBeanClassName(), holder.getBeanName());
 					}
 				}
 			}
 		}
-
+		/*
+		 * 上面的代码就是扫描普通类----@Component
+		 * 并且放到了map当中
+		 */
 		// Process any @Import annotations
+		//处理@Import  imports 3种情况
+		//ImportSelector
+		//普通类
+		//ImportBeanDefinitionRegistrar
+		//这里和内部地柜调用时候的情况不同
+		/*
+		 * 这里处理的import是需要判断我们的类当中时候有@Import注解
+		 * 如果有这把@Import当中的值拿出来，是一个类
+		 * 比如@Import(xxxxx.class)，那么这里便把xxxxx传进去进行解析
+		 * 在解析的过程中如果发觉是一个importSelector那么就回调selector的方法
+		 * 返回一个字符串（类名），通过这个字符串得到一个类
+		 * 继而在递归调用本方法来处理这个类
+		 *
+		 * 判断一组类是不是imports（3种import）
+		 *
+		 *
+		 */
 		processImports(configClass, sourceClass, getImports(sourceClass), true);
 
 		// Process any @ImportResource annotations
