@@ -16,8 +16,9 @@ public class IndexDao2 implements BeanPostProcessor {
 //		System.out.println("beanName==="+beanName);
 		if(beanName.equals("indexDao")) {
 			//返回一个代理对象
-			bean = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{IndexDao.class}, new MyInvocationHandler2(bean));
+			bean = Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{Dao.class}, new MyInvocationHandler2(bean));
 		}
+
 		return bean;
 	}
 

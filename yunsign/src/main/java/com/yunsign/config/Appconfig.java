@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
 
 @ComponentScan("com.yunsign")
 @Configuration
-@YunsignScan
+//@YunsignScan
 @EnableYunsign("test")
 public class Appconfig {
 }

@@ -73,7 +73,7 @@ public class YunsignAspect {
 //		System.out.println("pointCut.after");
 	}
 
-	@Around("pointCutThis()")
+//	@Around("pointCutThis()")
 	public void around(ProceedingJoinPoint proceedingJoinPoint){
 //		System.out.println("pointCut.around.a");
 		Object [] args = proceedingJoinPoint.getArgs();

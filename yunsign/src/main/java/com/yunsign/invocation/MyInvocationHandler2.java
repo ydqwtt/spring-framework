@@ -15,7 +15,10 @@ public class MyInvocationHandler2 implements InvocationHandler {
 
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		System.out.println("MyInvocationHandler2");
-		return method.invoke(target,args);
+		System.out.println("MyInvocationHandler2"+target.getClass().getName());
+
+		method.invoke(target,args);
+		System.out.println("MyInvocationHandler22");
+		return null;
 	}
 }
